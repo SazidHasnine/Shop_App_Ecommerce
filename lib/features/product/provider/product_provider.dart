@@ -33,8 +33,6 @@ class ProductProvider extends ChangeNotifier {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
-
-
   }
 
 }

@@ -1,13 +1,15 @@
+import 'package:flutter/foundation.dart';
+
 class ApiConstants {
   ApiConstants._();
 
   static String get baseUrl => 'https://dummyjson.com';
-  /* {
+  static String get orderBaseUrl {
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
       return 'http://10.0.2.2:3001';
     }
     return 'http://localhost:3001';
-  } */
+  }
 
   static const Duration connectTimeout = Duration(seconds: 15);
   static const Duration receiveTimeout = Duration(seconds: 15);
@@ -27,6 +29,8 @@ class ApiConstants {
   static const String authMe = '/auth/me';
   static const String authRefresh = '/auth/refresh';
   static const String users = '/users';
+
+  static const String ordersEndpoint = '/orders';
 
   // Storage Keys
   static const String authTokenKey = 'auth_token';

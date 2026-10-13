@@ -7,11 +7,11 @@ class DioClient {
   late final Dio _dio;
   final PreferenceService preferenceService;
 
-  DioClient({required this.preferenceService, Dio? dio}){
+  DioClient({required this.preferenceService, Dio? dio, String? baseUrl}){
     _dio = dio ??
         Dio(
           BaseOptions(
-            baseUrl: ApiConstants.baseUrl,
+            baseUrl: baseUrl ?? ApiConstants.baseUrl,
             connectTimeout: ApiConstants.connectTimeout,
             receiveTimeout: ApiConstants.receiveTimeout,
             sendTimeout: ApiConstants.sendTimeout,

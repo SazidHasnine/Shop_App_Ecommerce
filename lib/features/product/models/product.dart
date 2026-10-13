@@ -1,40 +1,76 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+
+/// An immutable domain entity representing an e-commerce product.
+///
+/// ### What is Immutability?
+/// An object is **immutable** when its internal state cannot be modified after it
+/// has been instantiated. All properties are declared `final`, preventing re-assignment:
+/// ```dart
+/// product.price = 19.99; // Compilation Error! Fields cannot be mutated.
+/// ```
+///
+/// ### Why Immutability is Essential for `Product`:
+/// 1. **Predictable & Bug-Free State:** Multiple screens (Product List, Product Detail,
+///    Cart, Favorites) can reference the exact same [Product] instance without fear
+///    that one screen or service will mutate its attributes unexpectedly.
+/// 2. **Reactive UI State Management:** In Flutter reactive architectures (Provider,
+///    Bloc, Riverpod), UI changes are triggered when a new state is emitted.
+///    Mutating an object in-place fails reference equality checks (`old == new` evaluates
+///    to `true`), leading to missed widget rebuilds. Immutability forces creation of a
+///    new instance via [copyWith]:
+///    ```dart
+///    final updatedProduct = product.copyWith(isFavourite: !product.isFavourite);
+///    ```
+/// 3. **Concurrency & Thread Safety:** Because data cannot change, background tasks,
+///    isolates, and asynchronous API caching layers can read from [Product] simultaneously
+///    without locks or race conditions.
+/// 4. **Flutter Compiler Optimization:** By combining `final` fields with a `const`
+///    constructor, Flutter can reuse canonical instances at compile time and optimize
+///    widget subtree rebuilds.
+/// 5. **Safe Collections:** [Product] can safely be placed in `Set` or used as a `Map`
+///    key because its identity and [hashCode] remain constant throughout its lifecycle.
+
+@immutable
 class Product {
-  final int? id;
-  final String? title;
-  final String? description;
-  final String? category;
-  final double? price;
-  final double? discountPercentage;
-  final double? rating;
-  final bool? isFavourite;
-  final int? stock;
-  final int? sold;
-  final List<String>? colors;
-  final List<String>? sizes;
-  final List<String>? tags;
-  final String? brand;
-  final String? sku;
-  final int? weight;
+  final int id;
+  final String title;
+  final String description;
+  final String category;
+  final double price;
+  final double discountPercentage;
+  final double rating;
+  final int stock;
+  final int sold;
+  final List<String> tags;
+  final String brand;
+  final String sku;
+  final int weight;
   final Dimensions? dimensions;
-  final String? warrantyInformation;
-  final String? shippingInformation;
-  final String? availabilityStatus;
-  final List<Review>? reviews;
-  final String? returnPolicy;
-  final int? minimumOrderQuantity;
+  final String warrantyInformation;
+  final String shippingInformation;
+  final String availabilityStatus;
+  final List<Review> reviews;
+  final String returnPolicy;
+  final int minimumOrderQuantity;
   final Meta? meta;
-  final List<String>? images;
-  final String? thumbnail;
+  final List<String> images;
+  final String thumbnail;
+  final bool isFavourite;
+  final List<String> colors;
+  final List<String> sizes;
 
   Product({
     required this.id,
     required this.title,
-    required this.description,
-    required this.price,
+    this.description = '',
     this.category = '',
+    this.price = 0.0,
     this.discountPercentage = 0.0,
     this.rating = 0.0,
     this.stock = 0,
+    this.sold = 0,
     this.tags = const [],
     this.brand = '',
     this.sku = '',
@@ -50,7 +86,6 @@ class Product {
     this.images = const [],
     this.thumbnail = '',
     this.isFavourite = false,
-    this.sold = 0,
     this.colors = const [],
     this.sizes = const [],
   });
@@ -112,18 +147,22 @@ class Product {
   );
 
   factory Product.fromMap(Map<String, dynamic> json) => Product(
-    id: json["id"],
-    title: json["title"],
-    description: json["description"],
-    category: json["category"],
-    price: json["price"]?.toDouble(),
-    discountPercentage: json["discountPercentage"]?.toDouble(),
-    rating: json["rating"]?.toDouble(),
-    stock: json["stock"],
-    tags: List<String>.from((json["tags"] ?? []).map((x) => x) ?? []),
-    brand: json["brand"],
-    sku: json["sku"],
-    weight: json["weight"],
+    id: (json["id"] as num?)?.toInt() ?? 0,
+    title: json["title"]?.toString() ?? '',
+    description: json["description"]?.toString() ?? '',
+    category: json["category"]?.toString() ?? '',
+    price: (json["price"] as num?)?.toDouble() ?? 0.0,
+    discountPercentage:
+      (json["discountPercentage"] as num?)?.toDouble() ?? 0.0,
+    rating: (json["rating"] as num?)?.toDouble() ?? 0.0,
+    stock: (json["stock"] as num?)?.toInt() ?? 0,
+    sold: (json["sold"] as num?)?.toInt() ?? 0,
+    tags: json['tags'] is List
+      ? (json["tags"] as List).map((x) => x.toString()).toList()
+      : const [],
+    brand: json["brand"]?.toString() ?? '',
+    sku: json["sku"]?.toString() ?? '',
+    weight: (json["weight"] as num?)?.toInt() ?? 0,
     dimensions: Dimensions.fromMap(json["dimensions"]),
     warrantyInformation: json["warrantyInformation"],
     shippingInformation: json["shippingInformation"],
@@ -137,7 +176,6 @@ class Product {
     images: List<String>.from((json["images"] ?? []).map((x) => x)),
     thumbnail: json["thumbnail"],
     isFavourite: json["isFavourite"] ?? json["isFavourite"] ?? false,
-    sold: json["sold"] ?? 0,
     colors: List<String>.from((json["colors"] ?? []).map((x) => x)),
     sizes: List<String>.from((json["sizes"] ?? []).map((x) => x)),
   );
@@ -173,18 +211,23 @@ class Product {
   };
 }
 
+@immutable
 class Dimensions {
-  final double? width;
-  final double? height;
-  final double? depth;
+  final double width;
+  final double height;
+  final double depth;
 
   const Dimensions({
-    required this.width,
-    required this.height,
-    required this.depth,
+    this.width = 0.0,
+    this.height = 0.0,
+    this.depth = 0.0,
   });
 
-  Dimensions copyWith({double? width, double? height, double? depth}) =>
+  Dimensions copyWith({
+    double? width,
+    double? height,
+    double? depth
+  }) =>
       Dimensions(
         width: width ?? this.width,
         height: height ?? this.height,
@@ -192,9 +235,9 @@ class Dimensions {
       );
 
   factory Dimensions.fromMap(Map<String, dynamic> json) => Dimensions(
-    width: json["width"]?.toDouble(),
-    height: json["height"]?.toDouble(),
-    depth: json["depth"]?.toDouble(),
+    width: (json["width"] as num?)?.toDouble() ?? 0.0,
+    height: (json["height"] as num?)?.toDouble() ?? 0.0,
+    depth: (json["depth"] as num?)?.toDouble() ?? 0.0,
   );
 
   Map<String, dynamic> toMap() => {
@@ -202,15 +245,42 @@ class Dimensions {
     "height": height,
     "depth": depth,
   };
+
+  String toJson() => json.encode(toMap());
+
+  @override
+  String toString() =>
+      // TODO: implement toString
+      'Dimensions(width: $width, height: $height, depth: $depth)';
+
+  @override
+  bool operator ==(Object other) =>
+      // TODO: implement ==
+      identical(this, other) ||
+      other is Dimensions &&
+      runtimeType == other.runtimeType &&
+      other.width == width &&
+      other.height == height &&
+      other.depth == depth;
+
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => Object.hash(width, height, depth);
 }
 
 class Meta {
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final String? barcode;
-  final String? qrCode;
+  final String barcode;
+  final String qrCode;
 
-  const Meta({this.createdAt, this.updatedAt, this.barcode, this.qrCode});
+  const Meta({
+    this.createdAt,
+    this.updatedAt,
+    this.barcode = '',
+    this.qrCode = '',
+  });
 
   Meta copyWith({
     DateTime? createdAt,
@@ -225,11 +295,17 @@ class Meta {
   );
 
   factory Meta.fromMap(Map<String, dynamic> json) => Meta(
-    createdAt: DateTime.parse(json["createdAt"]),
-    updatedAt: DateTime.parse(json["updatedAt"]),
-    barcode: json["barcode"],
-    qrCode: json["qrCode"],
+    createdAt: json['createdAt'] != null
+      ? DateTime.tryParse(json["createdAt"].toString())
+      : null,
+    updatedAt: json['updatedAt'] != null
+      ? DateTime.tryParse(json["updatedAt"].toString())
+      : null,
+    barcode: json["barcode"]?.toString() ?? '',
+    qrCode: json["qrCode"]?.toString() ?? '',
   );
+
+  factory Meta.fromJsom()  u
 
   Map<String, dynamic> toMap() => {
     "createdAt": createdAt?.toIso8601String(),
