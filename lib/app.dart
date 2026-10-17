@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app_ecommerce/core/network/dio_client.dart';
+import 'package:shop_app_ecommerce/core/router/app_router.dart';
 import 'package:shop_app_ecommerce/core/storage/preference_service.dart';
+import 'package:shop_app_ecommerce/core/theme/app_theme.dart';
+import 'package:shop_app_ecommerce/features/product/data/product_repository.dart';
+import 'package:shop_app_ecommerce/features/product/provider/product_provider.dart';
 
 class MyApp extends StatelessWidget {
   final DioClient dioClient;
@@ -14,16 +19,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cachedUser = preferenceService.get
+    final cachedUser = preferenceService.getUserData();
+    final initialUserId = (cachedUser?['id'] as num?)?.toInt() ?? 1;
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-
-      routes: {
-
-      },
-
-      initialRoute: ,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProductProvider(
+            productRepository: ProductRepositoryImpl(dioClient : dioClient)
+          ),
+        ),
+      ],
+      child: MaterialApp.router(
+        title: 'E-commerce Shop',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        routerConfig: AppRouter.router,
+      ),
     );
   }
 }

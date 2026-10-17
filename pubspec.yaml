@@ -38,6 +38,8 @@ dependencies:
   go_router: ^18.0.2
   dio: ^5.11.1
   shared_preferences: ^2.5.5
+  webview_flutter: ^4.14.1
+  cached_network_image: ^4.0.4
 
 dev_dependencies:
   flutter_test:

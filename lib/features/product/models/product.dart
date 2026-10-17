@@ -163,21 +163,37 @@ class Product {
     brand: json["brand"]?.toString() ?? '',
     sku: json["sku"]?.toString() ?? '',
     weight: (json["weight"] as num?)?.toInt() ?? 0,
-    dimensions: Dimensions.fromMap(json["dimensions"]),
-    warrantyInformation: json["warrantyInformation"],
-    shippingInformation: json["shippingInformation"],
-    availabilityStatus: json["availabilityStatus"],
-    reviews: List<Review>.from(
-      (json["reviews"] ?? []).map((x) => Review.fromMap(x)),
-    ),
-    returnPolicy: json["returnPolicy"],
-    minimumOrderQuantity: json["minimumOrderQuantity"],
-    meta: Meta.fromMap(json["meta"]),
-    images: List<String>.from((json["images"] ?? []).map((x) => x)),
-    thumbnail: json["thumbnail"],
-    isFavourite: json["isFavourite"] ?? json["isFavourite"] ?? false,
-    colors: List<String>.from((json["colors"] ?? []).map((x) => x)),
-    sizes: List<String>.from((json["sizes"] ?? []).map((x) => x)),
+    dimensions: json['dimensions'] is Map
+              ? Dimensions.fromMap(
+                  Map<String, dynamic>.from(json['dimensions'] as Map)
+                )
+              : null,
+    warrantyInformation: json["warrantyInformation"]?.toString() ?? '',
+    shippingInformation: json["shippingInformation"]?.toString() ?? '',
+    availabilityStatus: json["availabilityStatus"]?.toString() ?? '',
+    reviews: json['reviews'] is List
+           ? (json['reviews'] as List)
+               .whereType<Map>()
+               .map((x) => Review.fromMap(Map<String, dynamic>.from(x)))
+               .toList()
+           : const [],
+    returnPolicy: json["returnPolicy"]?.toString() ?? '',
+    minimumOrderQuantity:
+     (json["minimumOrderQuantity"] as num?)?.toInt() ?? 1,
+    meta: json['meta'] is Map
+        ? Meta.fromMap(Map<String, dynamic>.from(json["meta"] as Map))
+        : null,
+    images: json['images'] is List
+          ? (json['images'] as List).map((x) => x.toString()).toList()
+          : const [],
+    thumbnail: json["thumbnail"]?.toString() ?? '',
+    isFavourite: json["isFavourite"] as bool? ?? false,
+    colors: json['colors'] is List
+          ? (json['colors'] as List).map((x) => x.toString()).toList()
+          : const [],
+    sizes: json['sizes'] is List
+         ? (json['sizes'] as List).map((x) => x.toString()).toList()
+         : const [],
   );
 
   Map<String, dynamic> toMap() => {
@@ -204,11 +220,26 @@ class Product {
     "images": List<dynamic>.from(images?.map((x) => x) ?? []),
     "thumbnail": thumbnail,
     "isFavourite": isFavourite,
-    "isFavourite": isFavourite,
     "sold": sold,
     "colors": List<dynamic>.from(colors?.map((x) => x) ?? []),
     "sizes": List<dynamic>.from(sizes?.map((x) => x) ?? []),
   };
+
+  String toJson() => json.encode(toMap());
+
+  @override
+  String toString() =>
+    // TODO: implement toString
+    'Product(id: $id, title: $title, category: $category, price: $price, stock: $stock)';
+
+  @override
+  bool operator ==(Object other) =>
+    // TODO: implement ==
+    identical(this, other) ||
+    other is Product &&
+      runtimeType == other.runtimeType &&
+      other.id == id;
+
 }
 
 @immutable
@@ -305,7 +336,8 @@ class Meta {
     qrCode: json["qrCode"]?.toString() ?? '',
   );
 
-  factory Meta.fromJsom()  u
+  factory Meta.fromJsom(String source) =>
+    Meta.fromMap(json.decode(source) as Map<String, dynamic>);
 
   Map<String, dynamic> toMap() => {
     "createdAt": createdAt?.toIso8601String(),
@@ -313,21 +345,44 @@ class Meta {
     "barcode": barcode,
     "qrCode": qrCode,
   };
+
+  String toJson() => json.encode(toMap());
+
+  @override
+  String toString() =>
+    // TODO: implement toString
+    'Meta(createdAt: $createdAt, updatedAt: $updatedAt, barcode: $barcode, qrCode: $barcode)';
+
+  @override
+  bool operator ==(Object other) =>
+    // TODO: implement ==
+    identical(this, other) ||
+    other is Meta &&
+      runtimeType == other.runtimeType &&
+      other.createdAt == createdAt &&
+      other.updatedAt == updatedAt &&
+      other.barcode == barcode &&
+      other.qrCode == qrCode;
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => Object.hash(createdAt, updatedAt, barcode, qrCode);
 }
 
+@immutable
 class Review {
-  final int? rating;
-  final String? comment;
+  final int rating;
+  final String comment;
   final DateTime? date;
-  final String? reviewerName;
-  final String? reviewerEmail;
+  final String reviewerName;
+  final String reviewerEmail;
 
   Review({
-    this.rating,
-    this.comment,
+    this.rating = 0,
+    this.comment = '',
     this.date,
-    this.reviewerName,
-    this.reviewerEmail,
+    this.reviewerName = '',
+    this.reviewerEmail = '',
   });
 
   Review copyWith({
@@ -345,12 +400,17 @@ class Review {
   );
 
   factory Review.fromMap(Map<String, dynamic> json) => Review(
-    rating: json["rating"],
-    comment: json["comment"],
-    date: DateTime.parse(json["date"]),
-    reviewerName: json["reviewerName"],
-    reviewerEmail: json["reviewerEmail"],
+    rating: (json["rating"] as num?)?.toInt() ?? 0,
+    comment:  json["comment"]?.toString() ?? '',
+    date: json["date"] != null
+        ? DateTime.tryParse(json["date"].toString())
+        : null,
+    reviewerName: json["reviewerName"]?.toString() ?? '',
+    reviewerEmail: json["reviewerEmail"]?.toString() ?? '',
   );
+
+  factory Review.fromJson(String source) =>
+    Review.fromMap(json.decode(source) as Map<String, dynamic>);
 
   Map<String, dynamic> toMap() => {
     "rating": rating,
@@ -359,4 +419,27 @@ class Review {
     "reviewerName": reviewerName,
     "reviewerEmail": reviewerEmail,
   };
+
+  String toJson() => json.encode(toMap());
+
+  @override
+  String toString() =>
+    // TODO: implement toString
+    'Review(rating: $rating, comment: $comment, date: $date, reviewerEmail: $reviewerEmail)';
+
+  @override
+  bool operator ==(Object other) =>
+    // TODO: implement ==
+    identical(this, other) ||
+    other is Review &&
+      runtimeType == other.runtimeType &&
+      other.rating == rating &&
+      other.comment == comment &&
+      other.date == date &&
+      other.reviewerName == reviewerName &&
+      other.reviewerEmail == reviewerEmail;
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => Object.hash(rating, comment, date, reviewerName, reviewerEmail);
 }
