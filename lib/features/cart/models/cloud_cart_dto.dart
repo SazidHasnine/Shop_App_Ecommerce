@@ -125,7 +125,7 @@ class CloudCartDto {
     'totalQuantity': totalQuantity,
   };
 
-  List<CartItem> toCartItem() {
+  List<CartItem> toCartItems() {
     return products.map((p) => p.toCartItem()).toList();
   }
 }

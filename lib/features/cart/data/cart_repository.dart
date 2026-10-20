@@ -96,8 +96,16 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<void> deleteCloudCart() {
-
+  Future<void> deleteCloudCart() async {
+    final cartId = preferenceService.getColudCartId();
+    if(cartId != null) {
+      try{
+        await remoteDatasource.deleteCloudCart(cartId);
+      } catch (_) {
+        // Silently tolerates remote delete failures in the background
+      }
+      await setCloudCartId(cartId);
+    }
   }
 
   @override
