@@ -16,19 +16,24 @@ import 'package:shop_app_ecommerce/features/product/models/product.dart';
 /// 3. **Thread and Asynchronous Safety:** An immutable cart item can be safely passed
 ///    across asynchronous operations (e.g. persisting to SharedPreferences or syncing
 ///    with a backend API) without risking concurrent modification anomalies.
-
 @immutable
 class CartItem {
+  /// The [Product] associated with this cart entry.
   final Product product;
+
+  /// The quantity of the product in the cart (minimum 1).
   final int quantity;
 
+  /// Creates an immutable [CartItem].
   const CartItem({
     required this.product,
     this.quantity = 1,
   });
 
-  double get totalPrice => (product.price ?? 0) * quantity;
+  /// Computes the total price for this line item based on product price and quantity.
+  double get totalPrice => product.price * quantity;
 
+  /// Creates a copy of this [CartItem] with the given fields replaced by new values.
   CartItem copyWith({
     Product? product,
     int? quantity,
@@ -39,17 +44,38 @@ class CartItem {
     );
   }
 
+  /// Deserializes a [CartItem] from a JSON-compatible map.
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
-      product: Product.fromMap(json['product'] as Map<String, dynamic>),
-      quantity: json['quantity'] as int? ?? 1,
+      product: Product.fromMap(
+        json['product'] is Map
+            ? Map<String, dynamic>.from(json['product'] as Map)
+            : const <String, dynamic>{},
+      ),
+      quantity: (json['quantity'] as num?)?.toInt() ?? 1,
     );
   }
 
+  /// Serializes this [CartItem] to a JSON-compatible map.
   Map<String, dynamic> toJson() {
     return {
       'product': product.toMap(),
       'quantity': quantity,
     };
   }
+
+  @override
+  String toString() =>
+      'CartItem(product: ${product.title}, quantity: $quantity, totalPrice: \$$totalPrice)';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is CartItem &&
+              runtimeType == other.runtimeType &&
+              other.product == product &&
+              other.quantity == quantity;
+
+  @override
+  int get hashCode => Object.hash(product, quantity);
 }

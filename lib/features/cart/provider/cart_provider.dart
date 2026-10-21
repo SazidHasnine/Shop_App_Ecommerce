@@ -156,7 +156,7 @@ class CartProvider extends ChangeNotifier {
   Future<void> addItem(CartItem item, {int? quantity}) async {
     final addQuantity = quantity ?? item.quantity;
     final index = _items.indexWhere(
-        (existingItem) => existingItem.product.id == item.product.id;
+        (existingItem) => existingItem.product.id == item.product.id
     );
     if(index >= 0) {
       final existing = _items[index];

@@ -19,7 +19,7 @@ class CustomCachedImage extends StatelessWidget {
     this.height,
     this.iconSize = 32,
     this.placeHolder,
-    this.errorWidget.
+    this.errorWidget,
   });
 
   @override
@@ -39,7 +39,24 @@ class CustomCachedImage extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
-
+      placeholder: (context, url) =>
+          placeHolder ??
+          Center(
+            child: SizedBox(
+              width: iconSize * 0.75,
+              height: iconSize * 0.75,
+              child: const CupertinoActivityIndicator(),
+            ),
+          ),
+      errorWidget: (context, url, error) =>
+        errorWidget ??
+        Center(
+          child: Icon(
+            CupertinoIcons.photo,
+            size: iconSize,
+            color: Colors.grey,
+          ),
+        ),
     );
   }
 }
