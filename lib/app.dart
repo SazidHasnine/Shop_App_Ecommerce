@@ -4,6 +4,9 @@ import 'package:shop_app_ecommerce/core/network/dio_client.dart';
 import 'package:shop_app_ecommerce/core/router/app_router.dart';
 import 'package:shop_app_ecommerce/core/storage/preference_service.dart';
 import 'package:shop_app_ecommerce/core/theme/app_theme.dart';
+import 'package:shop_app_ecommerce/features/auth/data/auth_remote_datasource.dart';
+import 'package:shop_app_ecommerce/features/auth/data/auth_repository.dart';
+import 'package:shop_app_ecommerce/features/auth/provider/auth_provider.dart';
 import 'package:shop_app_ecommerce/features/cart/data/cart_remote_datasource.dart';
 import 'package:shop_app_ecommerce/features/cart/data/cart_repository.dart';
 import 'package:shop_app_ecommerce/features/cart/provider/cart_provider.dart';
@@ -27,6 +30,14 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(
+            authRepository: AuthRepositoryImpl(
+              authRemoteDatasource: AuthRemoteDatasourceImpl(dioClient: dioClient),
+              preferenceService: preferenceService,
+            ),
+          ),
+        ),
         ChangeNotifierProvider(
           create: (_) => ProductProvider(
             productRepository: ProductRepositoryImpl(dioClient : dioClient)
