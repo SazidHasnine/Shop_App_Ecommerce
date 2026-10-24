@@ -126,6 +126,7 @@ class ProfilePage extends StatelessWidget {
             color: surfaceColor,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: borderColor),
+            // erpgijreiopg
           ),
           child: Row(
             children: [
