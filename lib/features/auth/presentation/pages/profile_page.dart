@@ -188,7 +188,7 @@ class ProfilePage extends StatelessWidget {
                     ),
                     const SizedBox(height: 4,),
                     Text(
-                      '@${user.userName}',
+                      '@${user.username}',
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,

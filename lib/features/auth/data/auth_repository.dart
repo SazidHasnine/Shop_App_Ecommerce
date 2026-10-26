@@ -5,7 +5,7 @@ import 'package:shop_app_ecommerce/features/auth/models/user_model.dart';
 
 abstract class AuthRepository {
   Future<UserModel> login({
-    required String userName,
+    required String username,
     required String password,
   });
 
@@ -26,9 +26,9 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
-  Future<UserModel> login({required String userName, required String password}) async {
+  Future<UserModel> login({required String username, required String password}) async {
     final data = await authRemoteDatasource.login(
-        userName: userName,
+        username: username,
         password: password,
     );
 

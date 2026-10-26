@@ -1,6 +1,6 @@
 class UserModel {
   final int id;
-  final String userName;
+  final String username;
   final String email;
   final String firstName;
   final String lastName;
@@ -11,7 +11,7 @@ class UserModel {
 
   const UserModel({
     required this.id,
-    required this.userName,
+    required this.username,
     required this.email,
     required this.firstName,
     required this.lastName,
@@ -21,18 +21,20 @@ class UserModel {
     this.role,
   });
 
+  String get userName => username;
+
   String get fullName => '$firstName $lastName'.trim();
 
   String get initials {
     final first = firstName.isNotEmpty ? firstName[0].toUpperCase() : '';
     final last = lastName.isNotEmpty ? lastName[0].toUpperCase() : '';
-    return '$first$last'.isNotEmpty ? '$first$last' : userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
+    return '$first$last'.isNotEmpty ? '$first$last' : username.isNotEmpty ? username[0].toUpperCase() : 'U';
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       id: (map['id'] as num?)?.toInt() ?? 0,
-      userName: map['userName']?.toString() ?? '',
+      username: (map['username'] ?? map['userName'])?.toString() ?? '',
       email: map['email']?.toString() ?? '',
       firstName: map['firstName']?.toString() ?? '',
       lastName: map['lastName']?.toString() ?? '',
@@ -43,10 +45,10 @@ class UserModel {
     );
   }
 
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'userName': userName,
+      'username': username,
       'email': email,
       'firstName': firstName,
       'lastName': lastName,
@@ -59,7 +61,7 @@ class UserModel {
 
   UserModel copyWith({
     int? id,
-    String? userName,
+    String? username,
     String? email,
     String? firstName,
     String? lastName,
@@ -69,24 +71,24 @@ class UserModel {
     String? role,
   }) {
     return UserModel(
-        id: id ?? this.id,
-        userName: userName ?? this.userName,
-        email: email ?? this.email,
-        firstName: firstName ?? this.firstName,
-        lastName: lastName ?? this.lastName,
-        gender: gender ?? this.gender,
-        image: image ?? this.image,
+      id: id ?? this.id,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      gender: gender ?? this.gender,
+      image: image ?? this.image,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
     );
   }
 
   @override
   bool operator ==(Object other) {
-    // TODO: implement ==
-    if(identical(this, other)) return true;
-    return other is UserModel && other.id == id && other.userName == userName;
+    if (identical(this, other)) return true;
+    return other is UserModel && other.id == id && other.username == username;
   }
 
   @override
-  // TODO: implement hashCode
-  int get hashCode => id.hashCode ^ userName.hashCode;
+  int get hashCode => id.hashCode ^ username.hashCode;
 }

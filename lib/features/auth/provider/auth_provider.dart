@@ -52,7 +52,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<bool> login({
-    required String userName,
+    required String username,
     required String password,
   }) async {
     _status = AuthStatus.authenticating;
@@ -61,8 +61,8 @@ class AuthProvider extends ChangeNotifier {
 
     try {
       final user = await authRepository.login(
-          userName: userName,
-          password: password
+          username: username,
+          password: password,
       );
       _user = user;
       _status = AuthStatus.authenticated;

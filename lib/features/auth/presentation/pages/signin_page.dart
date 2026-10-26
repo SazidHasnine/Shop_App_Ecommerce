@@ -66,7 +66,7 @@ class _SigninPageState extends State<SigninPage> {
     final cartProvider = context.read<CartProvider>();
 
     final success = await authProvider.login(
-      userName: _userNameContoller.text.trim(),
+      username: _userNameContoller.text.trim(),
       password: _passwordContoller.text.trim(),
     );
 
@@ -213,10 +213,10 @@ class _SigninPageState extends State<SigninPage> {
                             runSpacing: 8,
                             children: _demoAccounts.map((account) {
                               final isSelected =
-                                  _userNameContoller.text == account['userName'];
+                                  _userNameContoller.text == account['username'];
                               return InkWell(
                                 onTap: () => _fillCredentials(
-                                  account['userName']!,
+                                  account['username']!,
                                   account['password']!,
                                 ),
                                 borderRadius: BorderRadius.circular(20),

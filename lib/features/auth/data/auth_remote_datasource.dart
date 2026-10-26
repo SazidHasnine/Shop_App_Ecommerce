@@ -4,7 +4,7 @@ import 'package:shop_app_ecommerce/core/network/dio_client.dart';
 
 abstract class AuthRemoteDatasource {
   Future<Map<String, dynamic>> login({
-    required String userName,
+    required String username,
     required String password,
     int? expiresInMins,
   });
@@ -21,18 +21,17 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
 
   @override
   Future<Map<String, dynamic>> login({
-    required String userName,
+    required String username,
     required String password,
-    int? expiresInMins
+    int? expiresInMins = 60,
   }) async {
     try {
       final response = await dioClient.post(
         ApiConstants.authLogin,
         data: {
-          'userName': userName.trim(),
+          'username': username.trim(),
           'password': password.trim(),
           'expiresInMins': ?expiresInMins,
-          //   if (expiresInMins != null) 'expiresInMins': expiresInMins,
         },
       );
       if(response.data is Map<String, dynamic>) {
