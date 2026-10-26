@@ -105,7 +105,7 @@ void main() {
       await tester.pumpWidget(buildTestableWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('Welcome to Evira'), findsOneWidget);
+      expect(find.text('Welcome to Shop-Ops'), findsOneWidget);
       expect(find.text('Username'), findsOneWidget);
       expect(find.text('Password'), findsOneWidget);
       expect(find.text('Quick Demo Accounts (Tap to auto-fill)'), findsOneWidget);

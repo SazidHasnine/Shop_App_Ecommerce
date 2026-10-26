@@ -2,6 +2,9 @@ import 'package:shop_app_ecommerce/core/constants/api_constants.dart';
 import 'package:shop_app_ecommerce/core/network/api_exceptions.dart';
 import 'package:shop_app_ecommerce/core/network/dio_client.dart';
 
+typedef AuthRemoteDataSource = AuthRemoteDatasource;
+typedef AuthRemoteDataSourceImpl = AuthRemoteDatasourceImpl;
+
 abstract class AuthRemoteDatasource {
   Future<Map<String, dynamic>> login({
     required String username,

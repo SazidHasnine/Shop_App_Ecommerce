@@ -8,6 +8,8 @@ import 'package:shop_app_ecommerce/core/router/app_router.dart';
 import 'package:shop_app_ecommerce/features/auth/provider/auth_provider.dart';
 import 'package:shop_app_ecommerce/features/cart/provider/cart_provider.dart';
 
+typedef SignInPage = SigninPage;
+
 class SigninPage extends StatefulWidget {
   final String? redirect;
   const SigninPage({super.key, this.redirect});

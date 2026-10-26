@@ -21,9 +21,10 @@ class AuthRepositoryImpl implements AuthRepository {
   final PreferenceService preferenceService;
 
   AuthRepositoryImpl({
-    required this.authRemoteDatasource,
+    AuthRemoteDatasource? authRemoteDatasource,
+    AuthRemoteDatasource? remoteDataSource,
     required this.preferenceService,
-  });
+  }) : authRemoteDatasource = authRemoteDatasource ?? remoteDataSource!;
 
   @override
   Future<UserModel> login({required String username, required String password}) async {
