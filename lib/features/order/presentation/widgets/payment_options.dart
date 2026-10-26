@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shop_app_ecommerce/core/constants/app_colors.dart';
 import 'package:shop_app_ecommerce/features/order/models/payment_method_model.dart';
 
-class PaymentOptions extends StatelessWidget {
-  const PaymentOptions({
+class PaymentOption extends StatelessWidget {
+  const PaymentOption({
     super.key,
     required this.method,
     required this.isDark,

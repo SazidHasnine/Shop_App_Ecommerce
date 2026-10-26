@@ -61,7 +61,7 @@ class Product {
   final List<String> colors;
   final List<String> sizes;
 
-  Product({
+  const Product({
     required this.id,
     required this.title,
     this.description = '',
@@ -205,7 +205,7 @@ class Product {
     "discountPercentage": discountPercentage,
     "rating": rating,
     "stock": stock,
-    "tags": List<dynamic>.from(tags?.map((x) => x) ?? []),
+    "tags": tags,
     "brand": brand,
     "sku": sku,
     "weight": weight,
@@ -213,33 +213,33 @@ class Product {
     "warrantyInformation": warrantyInformation,
     "shippingInformation": shippingInformation,
     "availabilityStatus": availabilityStatus,
-    "reviews": List<dynamic>.from(reviews?.map((x) => x.toMap()) ?? []),
+    "reviews": reviews.map((x) => x.toMap()).toList(),
     "returnPolicy": returnPolicy,
     "minimumOrderQuantity": minimumOrderQuantity,
     "meta": meta?.toMap(),
-    "images": List<dynamic>.from(images?.map((x) => x) ?? []),
+    "images": images,
     "thumbnail": thumbnail,
     "isFavourite": isFavourite,
     "sold": sold,
-    "colors": List<dynamic>.from(colors?.map((x) => x) ?? []),
-    "sizes": List<dynamic>.from(sizes?.map((x) => x) ?? []),
+    "colors": colors,
+    "sizes": sizes,
   };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-    // TODO: implement toString
     'Product(id: $id, title: $title, category: $category, price: $price, stock: $stock)';
 
   @override
   bool operator ==(Object other) =>
-    // TODO: implement ==
     identical(this, other) ||
     other is Product &&
       runtimeType == other.runtimeType &&
       other.id == id;
 
+  @override
+  int get hashCode => id.hashCode;
 }
 
 @immutable
@@ -377,7 +377,7 @@ class Review {
   final String reviewerName;
   final String reviewerEmail;
 
-  Review({
+  const Review({
     this.rating = 0,
     this.comment = '',
     this.date,

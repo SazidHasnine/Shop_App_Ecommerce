@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
               preferenceService: preferenceService,
               remoteDatasource: CartRemoteDatasourceImpl(dioClient: dioClient),
             ),
+            initialUserId: initialUserId,
           ),
         ),
         ChangeNotifierProxyProvider<AuthProvider, OrderProvider>(

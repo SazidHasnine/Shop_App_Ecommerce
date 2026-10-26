@@ -23,7 +23,8 @@ class AppRouter {
   static const String ordersPath = '/orders';
   static const String paymentPath = '/payment';
 
-  static String productionDetailRoute(int id) => '/product/$id';
+  static String productDetailRoute(int id) => '/product/$id';
+  static String productDetailsRoute(int id) => productDetailRoute(id);
   static String orderSuccessRoute(String orderId) => '/orderSuccess/$orderId';
 
   static final GoRouter router = GoRouter(
@@ -39,7 +40,7 @@ class AppRouter {
         name: 'productDetail',
         builder: (context, state) {
           final id = state.pathParameters['id'] ?? '';
-          return ProductDetailsScreen(productId: int.tryParse(id) ?? 0);
+          return ProductDetailScreen(productId: int.tryParse(id) ?? 0);
         },
       ),
       GoRoute(
@@ -82,7 +83,7 @@ class AppRouter {
         path: paymentPath,
         name: 'payment',
         builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic> ?? {};
+          final extra = state.extra as Map<String, dynamic>? ?? {};
           final paymentUrl = extra['paymentUrl'] as String? ?? '';
           final transactionId = extra['transactionId'] as String? ?? '';
           return PaymentPage(

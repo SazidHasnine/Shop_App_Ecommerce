@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app_ecommerce/core/constants/app_colors.dart';
 import 'package:shop_app_ecommerce/core/router/app_router.dart';
-import 'package:shop_app_ecommerce/features/auth/models/user_model.dart';
 import 'package:shop_app_ecommerce/features/auth/provider/auth_provider.dart';
 import 'package:shop_app_ecommerce/features/cart/provider/cart_provider.dart';
 import 'package:shop_app_ecommerce/features/order/provider/order_provider.dart';
